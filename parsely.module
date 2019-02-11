@@ -128,7 +128,7 @@ function parsely_page_build(&$page) {
   $markup = <<<EOT
 
 <!-- START Parse.ly Include: Standard -->
-<script id="parsely-cfg" data-parsely-site="$apikey" src="//cdn.parsely.com/keys/$apikey/p.js"></script>
+<script data-cfasync="false" id="parsely-cfg" data-parsely-site="$apikey" src="//cdn.parsely.com/keys/$apikey/p.js"></script>
 <!-- END Parse.ly Include: Standard -->
 EOT;
   $page['page_bottom']['parsely'] = array('#markup' => $markup);
