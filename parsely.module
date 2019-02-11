@@ -24,8 +24,6 @@ function parsely_page_attachments(array &$attachments)
     }
 
     else {
-		$parsely_span = '<span id="parsely-cfg" data-parsely-site="'.$apikey.'"></span>';
-
 		$parsely_metadata = new \Drupal\parsely\ParselyMetadata($node);
 		$parsely_metas = [
 			'@context' => 'schema.org',
@@ -46,18 +44,6 @@ function parsely_page_attachments(array &$attachments)
 				'type' => 'application/ld+json'
 			],
 			'#value' => new \Drupal\parsely\Component\Render\ParselyRenderer(json_encode($parsely_metas))
-		];
-
-		$attachments['#attached']['html_head'][] = [
-			[
-				'#type' => 'html_tag',
-				'#tag' => 'div',
-				'#attributes' => [
-					'id' => 'parsely-root',
-					'style' => 'display: none'
-				],
-				'#value' => $parsely_span
-			], 'div_tag'
 		];
 
 		$attachments['#attached']['html_head'][] = [
