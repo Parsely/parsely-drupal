@@ -5,5 +5,6 @@
     e.id = 'parsely-cfg';
     e.src = '//cdn.parsely.com/keys/'+site+'/p.js';
     e.setAttribute('data-parsely-site', site);
+    e.setAttribute('data-cfasync', 'false');
     b.appendChild(e);
 })(document);
