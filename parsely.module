@@ -43,19 +43,39 @@ function parsely_page_attachments(array &$attachments)
 			'#attributes' => [
 				'type' => 'application/ld+json'
 			],
-			'#value' => new \Drupal\parsely\Component\Render\ParselyRenderer(json_encode($parsely_metas))
+			'#value' => json_encode($parsely_metas)
 		];
 
 		$attachments['#attached']['html_head'][] = [
 			[$parsely_tag, 'parsely_tag'],
 		];
-
-		$attachments['#attached']['library'][] = 'parsely/parsely-include';
-		$attachments['#attached']['drupalSettings']['parsely']['parsely-include']['apikey'] = $apikey;
 	}
 
 }
 
+
+function parsely_page_top(array &$page_top) {
+
+	$apikey = \Drupal::config('parsely.settings')->get('parsely_apikey');
+	$node = \Drupal::routeMatch()->getParameter('node');
+	$route = \Drupal::routeMatch()->getRouteObject();
+	$backend_page = is_backend_page($route);
+	if (!$apikey || !$node || $backend_page) {
+
+	}
+
+	else {
+		$page_top['parsely'] = [
+			'#type' => 'html_tag',
+			'#tag' => 'script',
+			'#attributes' => [
+				'src' => 'https://cdn.parsely.com/keys/'.$apikey.'/p.js'
+			]
+		];
+	}
+
+
+}
 /**
  * Checks to see if page is an admin page / node edit page (draft page)
  * @param $route \Symfony\Component\Routing\Route
