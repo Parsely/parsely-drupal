@@ -13,17 +13,38 @@ include('section.inc');
 /**
  * Implements hook_page_attachments().
  */
-function parsely_page_attachments(array &$attachments)
+
+function parsely_page_top(array &$page_top)
 {
-    $apikey = \Drupal::config('parsely.settings')->get('parsely_apikey');
-    $node = \Drupal::routeMatch()->getParameter('node');
-    $route = \Drupal::routeMatch()->getRouteObject();
-    $backend_page = is_backend_page($route);
-    if (!$apikey || !$node || $backend_page) {
 
-    }
+	$apikey = \Drupal::config('parsely.settings')->get('parsely_apikey');
+	$node = \Drupal::routeMatch()->getParameter('node');
+	$route = \Drupal::routeMatch()->getRouteObject();
+	$backend_page = is_backend_page($route);
+	if (!$apikey || !$node || $backend_page) {
 
-    else {
+	} else {
+		$page_top['parsely'] = [
+			'#type' => 'html_tag',
+			'#tag' => 'script',
+			'#attributes' => [
+				'src' => 'https://cdn.parsely.com/keys/' . $apikey . '/p.js'
+			]
+		];
+	}
+}
+
+function parsely_page_bottom(array &$page_bottom) {
+
+	$apikey = \Drupal::config('parsely.settings')->get('parsely_apikey');
+	$node = \Drupal::routeMatch()->getParameter('node');
+	$route = \Drupal::routeMatch()->getRouteObject();
+	$backend_page = is_backend_page($route);
+	if (!$apikey || !$node || $backend_page) {
+
+	}
+
+	else {
 		$parsely_metadata = new \Drupal\parsely\ParselyMetadata($node);
 		$parsely_metas = [
 			'@context' => 'schema.org',
@@ -43,35 +64,11 @@ function parsely_page_attachments(array &$attachments)
 			'#attributes' => [
 				'type' => 'application/ld+json'
 			],
-			'#value' => new \Drupal\parsely\Component\Render\ParselyRenderer(json_encode($parsely_metas))
+				'#value' => new \Drupal\parsely\Component\Render\ParselyRenderer(json_encode($parsely_metas))
+
 		];
 
-		$attachments['#attached']['html_head'][] = [
-			[$parsely_tag, 'parsely_tag'],
-		];
-	}
-
-}
-
-
-function parsely_page_top(array &$page_top) {
-
-	$apikey = \Drupal::config('parsely.settings')->get('parsely_apikey');
-	$node = \Drupal::routeMatch()->getParameter('node');
-	$route = \Drupal::routeMatch()->getRouteObject();
-	$backend_page = is_backend_page($route);
-	if (!$apikey || !$node || $backend_page) {
-
-	}
-
-	else {
-		$page_top['parsely'] = [
-			'#type' => 'html_tag',
-			'#tag' => 'script',
-			'#attributes' => [
-				'src' => 'https://cdn.parsely.com/keys/'.$apikey.'/p.js'
-			]
-		];
+		$page_bottom['parsely'] = $parsely_tag;
 	}
 
 
