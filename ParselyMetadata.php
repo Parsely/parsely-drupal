@@ -148,12 +148,13 @@ class ParselyMetadata {
 
             if ($term_ids) {
                 foreach ($term_ids as $term_id) {
-                    $term_name = Term::load($term_id['target_id'])->getName();
-
-                    array_push($tags, $term_name);
+                	$loaded_term = Term::load($term_id['target_id']);
+                	if (isset($loaded_term)) {
+						$term_name = $loaded_term->getName();
+						array_push($tags, $term_name);
+					}
                 }
             }
-
         }
         return $tags;
     }

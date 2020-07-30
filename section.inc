@@ -61,7 +61,10 @@ function parsely_get_section($node)
 				}
 
 				if (count($term_ids) == 1) {
-					$section_name = Term::load($term_ids[0]['target_id'])->getName();
+					$loaded_term = Term::load($term_ids[0]['target_id']);
+					if (isset($loaded_term)) {
+						$section_name = Term::load($term_ids[0]['target_id'])->getName();
+					}
 				} elseif ($section_criterion == 'first' || $section_criterion == 'last' && $term_ids) {
 
 					asort($term_ids);
