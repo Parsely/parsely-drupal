@@ -157,44 +157,7 @@ class ParselyAdminSettings extends ConfigFormBase {
         }
 
 
-        if (\Drupal::moduleHandler()->moduleExists('token')) {
-            $form['parsely_metadata']['#description'] .= ' ' . t('You can use tokens from the list below to specify dynamic patterns for each metadata item.');
-            // Set up a token browser so admins can use relevant tokens to define
-            // metadata values. Update all textfields in this fieldset accordingly.
-            // Note: The ability to provide token_types param to theme_token_tree_link
-            // was introduced by the token module on 2014-06-19 in v. 7.x-1.5+4-dev.
-            // @see https://www.drupal.org/node/2289203.
-            $token_module_info = system_get_info('module', 'token');
-            $token_version = $token_module_info['version'];
-            if (version_compare($token_version, '7.x-1.5+4-dev', 'ge')) {
-                $theme_function = 'token_tree_link';
-            }
-            else {
-                $theme_function = 'token_tree';
-            }
-            $form['parsely_metadata']['tokens'] = [
-                '#theme' => $theme_function,
-                '#token_types' => [
-                    'node'
-                ],
-                '#global_types' => TRUE,
-                '#click_insert' => TRUE,
-            ];
 
-            foreach (Element::children($form['parsely_metadata']) as $field_key) {
-                $field = $form['parsely_metadata'][$field_key];
-                if ($field['#type'] == 'textfield') {
-                    // Note: because we're not requiring a minimum number of tokens for
-                    // these fields, the only way they can fail validation is if they
-                    // include a real token that belongs to a disallowed context.
-                    $field['#element_validate'] = [
-                        'token_element_validate'
-                    ];
-                    $field['#token_types'] = ['node'];
-                    $form['parsely_metadata'][$field_key] = $field;
-                }
-            }
-        }
 
         // Advanced settings
         $form['parsely_optional_settings'] = [
