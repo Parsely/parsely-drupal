@@ -58,10 +58,14 @@ class ParselyMetadata {
 	 * @return string
 	 */
 	protected function setImageURL($node) {
-		if (!$node->hasField('field_image')) {
+		$field_machine_name = \Drupal::config('parsely.settings')->get('parsely_optional_settings')['parsely_metadata_thumbnail_url'];
+		if (empty($field_machine_name)) {
+			$field_machine_name = 'field_image';
+		}
+		if (!$node->hasField($field_machine_name)) {
 			return "";
 		}
-			$file_entity = $node->get('field_image')->entity;
+			$file_entity = $node->get($field_machine_name)->entity;
 
 			if (!empty($file_entity)) {
 				$file_path = $file_entity->getFileUri();
